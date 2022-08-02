@@ -5,3 +5,7 @@ Overlap : 被系统分为说话人A和说话人B同时说话, 但实际没有同
 Confusion : 被系统分为说话人A的, 但是实际属于说话人B的时长;
 Reference Length : 是整条音频的总时长。
 DER的计算公式见图 DER.png
+
+
+结果RTTM格式说明
+https://www.github.com/nryant/dscore#rttm
