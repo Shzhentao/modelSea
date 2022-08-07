@@ -1,6 +1,6 @@
 import os
 from subprocess import call
-
+import time
 
 def imgMultidownloader(pdfurl, localPdfName):
     IDM = "C:\\Program Files (x86)\\Internet Download Manager\\IDMan.exe"
@@ -13,5 +13,13 @@ if __name__ == "__main__":
     for line in lines:
         url = line.strip().split(" ")[-1]
         dirsss = line.strip().split(" ")[-2].replace("$DLFOLDER", "amicorpus")
+        name = url.split("audio/")[-1]
+        target = dirsss + "/" + name
         os.makedirs(dirsss, exist_ok=True)
-        imgMultidownloader(url, dirsss)
+        if os.path.exists(target):
+            continue
+        imgMultidownloader(url, target)
+        while True:
+            time.sleep(1)
+            if os.path.exists(target):
+                break
