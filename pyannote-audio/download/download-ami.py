@@ -4,7 +4,7 @@ import time
 
 def imgMultidownloader(pdfurl, localPdfName):
     IDM = "C:\\Program Files (x86)\\Internet Download Manager\\IDMan.exe"
-    call([IDM, '/d', pdfurl, '/p', os.path.abspath(localPdfName), '/f', os.path.basename(localPdfName), '/a'])
+    call([IDM, '/d', pdfurl, '/p', os.path.dirname(localPdfName), '/f', os.path.basename(localPdfName), '/a'])
     call([IDM, '/s'])
 
 
