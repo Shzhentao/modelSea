@@ -5,6 +5,9 @@ from pyannote.audio.utils.signal import binarize
 from pyannote.audio.utils.metric import DiscreteDiarizationErrorRate
 from pyannote.audio.pipelines.utils import get_devices
 from pyannote.database import get_protocol
+from pyannote.audio import Inference
+import pytorch_lightning as pl
+
 
 def test(model, protocol, subset="test"):
     (device,) = get_devices(needs=1)
@@ -21,8 +24,9 @@ def test(model, protocol, subset="test"):
 
 ami = get_protocol('AMI.SpeakerDiarization.only_words')
 pretrained = Model.from_pretrained("pyannote/segmentation")
-spk_probability = Inference(pretrained, step=2.5)(test_file)
-test_file["annotation"].discretize(notebook.crop, resolution=0.010)
+# test_file = next(ami.test())
+# spk_probability = Inference(pretrained, step=2.5)(test_file)
+# test_file["annotation"].discretize(notebook.crop, resolution=0.010)
 seg_task = Segmentation(ami, duration=5.0, max_num_speakers=4)
 der_pretrained = test(model=pretrained, protocol=ami, subset="test")
 # print(f"Local DER (pretrained) = {der_pretrained * 100:.1f}%")

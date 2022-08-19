@@ -5,6 +5,8 @@ from pyannote.audio.utils.metric import DiscreteDiarizationErrorRate
 from pyannote.audio.pipelines.utils import get_devices
 from pyannote.database import get_protocol
 from pyannote.audio.models.segmentation import PyanNet
+import pytorch_lightning as pl
+from pyannote.audio import Inference
 
 def test(model, protocol, subset="test"):
     (device,) = get_devices(needs=1)
@@ -17,6 +19,18 @@ def test(model, protocol, subset="test"):
         uem = file["annotated"]
         _ = metric(reference, hypothesis, uem=uem)
     return abs(metric)
+
+import os
+os.environ["PYANNOTE_DATABASE_CONFIG"] = 'AMI-diarization-setup/pyannote/database.yml'
+
+# used to automatically find paths to wav files
+from pyannote.database import FileFinder
+preprocessors = {'audio': FileFinder()}
+
+# initialize 'only_words' experimental protocol
+# from pyannote.database import get_protocol
+# only_words = get_protocol('AMI.SpeakerDiarization.only_words', preprocessors=preprocessors)
+
 
 ami = get_protocol('AMI.SpeakerDiarization.only_words')
 seg_task = Segmentation(ami, duration=5.0, max_num_speakers=4)
