@@ -20,22 +20,22 @@ def test(model, protocol, subset="test"):
         _ = metric(reference, hypothesis, uem=uem)
     return abs(metric)
 
-import os
-os.environ["PYANNOTE_DATABASE_CONFIG"] = 'AMI-diarization-setup/pyannote/database.yml'
+# import os
+# os.environ["PYANNOTE_DATABASE_CONFIG"] = '/media/aiden/C227C05090D381B7/sztCode/modelSea/pyannote-audio/AMI-diarization-setup/pyannote/database.yml'
 
 # used to automatically find paths to wav files
 from pyannote.database import FileFinder
 preprocessors = {'audio': FileFinder()}
 
 # initialize 'only_words' experimental protocol
-# from pyannote.database import get_protocol
-# only_words = get_protocol('AMI.SpeakerDiarization.only_words', preprocessors=preprocessors)
+from pyannote.database import get_protocol
+only_words = get_protocol('AMI.SpeakerDiarization.only_words', preprocessors=preprocessors)
 
 
-ami = get_protocol('AMI.SpeakerDiarization.only_words')
-seg_task = Segmentation(ami, duration=5.0, max_num_speakers=4)
+# ami = get_protocol('AMI.SpeakerDiarization.only_words')
+seg_task = Segmentation(only_words, duration=5.0, max_num_speakers=4)
 vad_model = PyanNet(task=seg_task, sincnet={'stride': 10})
 trainer = pl.Trainer(gpus=1, max_epochs=50)
 trainer.fit(vad_model)
-der_scratched = test(model=vad_model, protocol=ami, subset="test")
-print(f"Local DER (finetuned) = {der_scratched * 100:.1f}%")
+der_scratched = test(model=vad_model, protocol=only_words, subset="test")
+print(f"Local DER (scratch) = {der_scratched * 100:.1f}%")
