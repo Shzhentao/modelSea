@@ -35,7 +35,7 @@ only_words = get_protocol('AMI.SpeakerDiarization.only_words', preprocessors=pre
 # ami = get_protocol('AMI.SpeakerDiarization.only_words')
 seg_task = Segmentation(only_words, duration=5.0, max_num_speakers=4)
 vad_model = PyanNet(task=seg_task, sincnet={'stride': 10})
-trainer = pl.Trainer(gpus=1, max_epochs=50)
+trainer = pl.Trainer(gpus=1, max_epochs=100)
 trainer.fit(vad_model)
 der_scratched = test(model=vad_model, protocol=only_words, subset="test")
 print(f"Local DER (scratch) = {der_scratched * 100:.1f}%")
